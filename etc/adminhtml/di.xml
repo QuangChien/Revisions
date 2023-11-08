@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+  ~ Magezon
+  ~
+  ~ This source file is subject to the Magezon Software License, which is available at https://magezon.com/license/.
+  ~ Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
+  ~ If you wish to customize this module for your needs.
+  ~ Please refer to https://www.magezon.com for more information.
+  ~
+  ~ @category  Magezon
+  ~ @package   Magezon_Revisions
+  ~ @copyright Copyright (C) 2023 Magezon (https://magezon.com)
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+<!--    Cms Page-->
+    <virtualType name="Magezon\Revisions\Ui\Page\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="comments" xsi:type="array">
+                    <item name="class" xsi:type="string">Magezon\Revisions\Ui\DataProvider\Page\Form\Modifier\Revisions</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Cms\Model\Page\DataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Magezon\Revisions\Ui\Page\Modifier\Pool</argument>
+        </arguments>
+    </type>
+
+<!--    Cms Block-->
+    <virtualType name="Magezon\Revisions\Ui\Block\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="comments" xsi:type="array">
+                    <item name="class" xsi:type="string">Magezon\Revisions\Ui\DataProvider\Block\Form\Modifier\Revisions</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Cms\Model\Block\DataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Magezon\Revisions\Ui\Block\Modifier\Pool</argument>
+        </arguments>
+    </type>
+</config>

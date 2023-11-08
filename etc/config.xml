@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Magezon
+  ~
+  ~ This source file is subject to the Magezon Software License, which is available at https://magezon.com/license/.
+  ~ Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
+  ~ If you wish to customize this module for your needs.
+  ~ Please refer to https://www.magezon.com for more information.
+  ~
+  ~ @category  Magezon
+  ~ @package   Magezon_Revisions
+  ~ @copyright Copyright (C) 2023 Magezon (https://magezon.com)
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mgz_revisions>
+            <revision_page>
+                <revision_page_save>0</revision_page_save>
+                <revision_page_limit>10</revision_page_limit>
+            </revision_page>
+            <revision_block>
+                <revision_block_save>0</revision_block_save>
+                <revision_block_limit>10</revision_block_limit>
+            </revision_block>
+        </mgz_revisions>
+    </default>
+</config>

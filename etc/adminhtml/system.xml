@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Magezon
+  ~
+  ~ This source file is subject to the Magezon Software License, which is available at https://magezon.com/license/.
+  ~ Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
+  ~ If you wish to customize this module for your needs.
+  ~ Please refer to https://www.magezon.com for more information.
+  ~
+  ~ @category  Magezon
+  ~ @package   Magezon_Revisions
+  ~ @copyright Copyright (C) 2023 Magezon (https://magezon.com)
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="mgz_revisions" translate="label" sortOrder="110" type="text" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <class>separator-top</class>
+            <label>Revisions</label>
+            <tab>magezon</tab>
+            <resource>Magezon_Revisions::settings</resource>
+            <group id="information" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Information</label>
+                <field id="version" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Current Version</label>
+                    <frontend_model>Magezon\Revisions\Block\Adminhtml\Renderer\Config\Version</frontend_model>
+                </field>
+            </group>
+            <group id="revision_page" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Page</label>
+                <field id="revision_page_save" translate="label comment" type="select" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Create Revision on Save</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, Revision created on every page save.</comment>
+                </field>
+                <field id="revision_page_limit" translate="label comment" type="text" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Revision Page Limit</label>
+                    <validate>validate-digits</validate>
+                    <comment>If the value of the field is empty, the number of revisions created is unlimited.</comment>
+                </field>
+            </group>
+
+            <group id="revision_block" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Block</label>
+                <field id="revision_block_save" translate="label comment" type="select" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Create Revision on Save</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, Revision created on every block save.</comment>
+                </field>
+                <field id="revision_block_limit" translate="label comment" type="text" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Revision Block Limit</label>
+                    <validate>validate-digits</validate>
+                    <comment>If the value of the field is empty, the number of revisions created is unlimited.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

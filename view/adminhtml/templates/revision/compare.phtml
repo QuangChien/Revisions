@@ -1,0 +1,233 @@
+<?php
+/**
+ * Magezon
+ *
+ * This source file is subject to the Magezon Software License, which is available at https://magezon.com/license/.
+ * Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
+ * If you wish to customize this module for your needs.
+ * Please refer to https://www.magezon.com for more information.
+ *
+ * @category  Magezon
+ * @package   Magezon_Revisions
+ * @copyright Copyright (C) 2023 Magezon (https://magezon.com)
+ */
+
+?>
+<?php
+/**
+ * Compare class
+ *
+ * @var $block \Magezon\Revisions\Block\Adminhtml\Compare
+ */
+?>
+
+<?php
+
+$totalRevision = $block->getCountRevision();
+$titleEntity = $block->getEntityTitle();
+$entityId = $block->getEntityId();
+$revisionType = $block->getRevisionType();
+$restorePath = $block->getRestorePath();
+$step = number_format(100/(($totalRevision - 1) ?: 1), 4);
+?>
+<div id="revisions">
+    <div class="revisions-wrapper">
+        <h1>Compare Revisions of <a target="_blank" href="<?= $block->escapeUrl($block->getEntityUrl()) ?>"><?= $block->escapeHtml($titleEntity) ?></a></h1>
+        <div class="meta-link">
+            <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>"><?= __('← Back') ?></a>
+        </div>
+        <div class="revision-toggle-compare-mode">
+            <label>
+                <input id="comp-two-revisions" type="checkbox" class="compare-two-revisions"> <?= __('Compare any two revisions') ?>
+            </label>
+        </div>
+        <div class="revisions-controls">
+            <div class="revisions-button revisions-previous">
+                <input id="prev" class="button" type="button" value="Previous">
+            </div>
+            <div class="revisions-button revisions-next">
+                <input id="next" class="button" type="button" value="Next">
+            </div>
+        </div>
+        <div class="revisions-tickmarks">
+            <?php for ($i = 1; $i <= $totalRevision; $i++): ?>
+                <div style="left: <?= $i * $step ?>%"></div>
+            <?php endfor; ?>
+        </div>
+        <div data-step="<?= $step ?>" id="slider"></div>
+        <div class="revisions-meta">
+            <div class="revisions-meta-info-wrap">
+                <div class="revisions-meta-info">
+                    <strong id="revisions-time" class="revisions-time"><?= __('From:') ?> </strong>
+                    <div class="revisions-author-avatar">
+                        <img src="<?= $block->escapeUrl($block->getAvatarDefault()) ?>" alt="">
+                    </div>
+                    <div class="revisions-author-info">
+                        <span class="revisions-author-name" id="revisions-author-name-from"></span>
+                        <span id="revisions-author-time-from" class="revisions-author-time"></span>
+                    </div>
+                </div>
+                <div id="revisions-time-to" class="revisions-meta-info">
+                    <strong class="revisions-time"><?= __('To:') ?> </strong>
+                    <div class="revisions-author-avatar">
+                        <img src="<?= $block->escapeUrl($block->getAvatarDefault()) ?>" alt="">
+                    </div>
+                    <div class="revisions-author-info">
+                        <span class="revisions-author-name" id="revisions-author-name-to"></span>
+                        <span id="revisions-author-time-to" class="revisions-author-time"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="revisions-restore">
+                <a href="" id="revisions-restore"
+                   class="restore-revision button"><?= __('Restore This Revision') ?></a>
+            </div>
+        </div>
+
+        <div class="revisions-diff-frame"></div>
+    </div>
+</div>
+<div id="revision_load"">
+    <img src="<?= $block->escapeUrl($block->getLoadingImage()) ?>">
+</div>
+<script>
+    require(['jquery', 'jquery/ui'], function($){
+        const indexEnd = <?= $totalRevision - 1 ?>;
+        const entityId = <?= $entityId ?>;
+        const revisionType = '<?= $revisionType ?>';
+        const restorePath = '<?= $restorePath ?>';
+
+        const makeRequest = (revisionIndex1, revisionIndex2) => {
+            $.ajax({
+                url: window.location.origin + "/mgz_revision/revision/compare",
+                method: "POST",
+                data: { revisionIndex1, revisionIndex2, entityId, revisionType},
+                dataType: "json",
+                beforeSend: function() {
+                    $('#revision_load').show();
+                },
+                success: function(data) {
+                    $('#revision_load').hide();
+                    if(revisionIndex2) {
+                        $('#revisions-author-name-from').html(data.admin_username.from)
+                        $('#revisions-author-time-from').html(data.time_create.from)
+                        $('#revisions-author-name-to').html(data.admin_username.to)
+                        $('#revisions-author-time-to').html(data.time_create.to)
+                    }else{
+                        if(revisionIndex1 === 0) {
+                            $('#revisions-author-name-from').html(data.admin_username.from)
+                            $('#revisions-author-time-from').html(data.time_create.from)
+                        }else{
+                            $('#revisions-author-name-from').html(data.admin_username.to)
+                            $('#revisions-author-time-from').html(data.time_create.to)
+                        }
+                    }
+                    $('.revisions-diff-frame').html(data.content)
+                    $('#revisions-restore').attr('href', restorePath.replace(/(id\/)\d+/, '$1' + data.current_revisionId))
+                }
+            });
+        }
+
+        makeRequest(indexEnd);
+
+        var sliderElement = $("#slider");
+        var stepSlider = Number(sliderElement.attr('data-step'));
+        $("#next").prop('disabled', true);
+        $('#revisions-time').hide();
+        $('#revisions-time-to').hide();
+        $('#comp-two-revisions').click(function(){
+            if($(this).prop('checked')) {
+                $('#revisions-time').show();
+                $('#revisions-time-to').show();
+                $("#next").prop('disabled', true);
+                $("#revisions-restore").show();
+                $("#prev").prop('disabled', true);
+                $("#revisions-restore").hide();
+
+                sliderElement.slider("option", "range", true);
+                sliderElement.slider("option", "values", [(100-stepSlider), 100]);
+                makeRequest(indexEnd - 1, indexEnd);
+            }else{
+                $("#next").prop('disabled', true);
+                $("#revisions-restore").hide();
+                $("#prev").prop('disabled', false);
+                $("#revisions-restore").hide();
+                $('#revisions-time').hide();
+                $('#revisions-time-to').hide();
+                sliderElement.slider("option", "range", "max");
+                sliderElement.slider("option", "value", 100);
+                makeRequest(indexEnd);
+            }
+        })
+
+        $(function() {
+            sliderElement.slider({
+                value: 100,
+                min: 0,
+                max: 100,
+                step: stepSlider,
+                animate:"fast",
+                range: false,
+                slide: function( event, ui ) {
+                    sliderElement.attr('data-object', Math.floor(ui.value/stepSlider))
+                    if(ui.values) {
+                        sliderElement.removeAttr('data-object');
+                        if((ui.values[0]  === ui.values[1])) {
+                            return false;
+                        }
+                        $("#prev").prop('disabled', true);
+                        $("#next").prop('disabled', true);
+                        $("#revisions-restore").hide();
+
+                        makeRequest(Math.floor(ui.values[0]/stepSlider), Math.floor(ui.values[1]/stepSlider))
+                    }else{
+                        if(Math.round(ui.value) === 0) {
+                            $("#prev").prop('disabled', true);
+                        }else{
+                            $("#prev").prop('disabled', false);
+                        }
+                        if(Math.round(ui.value) === 100) {
+                            $("#next").prop('disabled', true);
+                            $("#revisions-restore").hide();
+                        }else{
+                            $("#next").prop('disabled', false);
+                            $("#revisions-restore").css('display', 'block');
+                        }
+                        makeRequest(Math.floor(ui.value/stepSlider))
+                    }
+                }
+            });
+        });
+        $("#prev").click(function() {
+            var value = Number(sliderElement.slider("option", "value").toFixed(4));
+            sliderElement.slider("option", "value", value - stepSlider);
+            var valueAfter = Number(sliderElement.slider("option", "value").toFixed(4));
+            sliderElement.attr('data-object', Math.round(valueAfter/stepSlider));
+            if(Math.round(valueAfter) === 0) {
+                sliderElement.slider("option", "value", 0);
+                $("#prev").prop('disabled', true)
+            }
+            if(Math.round(valueAfter) !== 100){
+                $("#next").prop('disabled', false);
+                $("#revisions-restore").css('display', 'block');
+
+            }
+            makeRequest(Math.round(valueAfter/stepSlider))
+        });
+        $("#next").click(function() {
+            var value = Number(sliderElement.slider("option", "value").toFixed(4));
+            sliderElement.slider("option", "value", Number(value) + Number(stepSlider));
+            var valueAfter = Number(sliderElement.slider("option", "value").toFixed(4));
+            sliderElement.attr('data-object', Math.round(valueAfter/stepSlider));
+            if(Math.round(valueAfter) === 100) {
+                sliderElement.slider("option", "value", 100);
+                $("#next").prop('disabled', true);
+                $("#revisions-restore").hide();
+            }
+            if(Math.round(valueAfter) !== 0){
+                $("#prev").prop('disabled', false);
+            }
+            makeRequest(Math.round(valueAfter/stepSlider))
+        });
+    });
+</script>

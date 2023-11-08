@@ -1,0 +1,306 @@
+/*
+ * Magezon
+ *
+ * This source file is subject to the Magezon Software License, which is available at https://magezon.com/license/.
+ * Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
+ * If you wish to customize this module for your needs.
+ * Please refer to https://www.magezon.com for more information.
+ *
+ * @category  Magezon
+ * @package   Magezon_Revisions
+ * @copyright Copyright (C) 2023 Magezon (https://magezon.com)
+ */
+
+.mgz_revisions{
+    .page-wrapper{
+        background: unset;
+    }
+    .admin__action-dropdown{
+        background: unset;
+    }
+}
+
+#revision_load{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0; bottom: 0;
+    background: #000;
+    opacity: 0.2;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img{
+        width: 4rem;
+        height: 4rem;
+    }
+}
+
+
+#revisions {
+    padding: 18px;
+    .button{
+        color: #2271b1;
+        border-color: #2271b1;
+        background: #f6f7f7;
+        display: block;
+        text-decoration: none;
+        font-size: 13px;
+        line-height: 2;
+        min-height: 30px;
+        padding: 0 10px;
+        cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        -webkit-appearance: none;
+        border-radius: 3px;
+        white-space: nowrap;
+        box-sizing: border-box;
+        &:disabled{
+            color: unset;
+            border-color: #ccc;
+            cursor: not-allowed;
+        }
+    }
+
+    .revisions-wrapper {
+        margin: 0 auto;
+
+        h1 {
+            font-size: 23px;
+            margin-bottom: 6px;
+        }
+
+        .meta-link {
+            a {
+                font-size: 14px;
+            }
+        }
+
+        .revision-toggle-compare-mode {
+            text-align: right;
+            font-size: 14px;
+        }
+
+        .revisions-controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 0 12px;
+            position: relative;
+            bottom: -32px;
+        }
+
+        .revisions-tickmarks {
+            position: relative;
+            height: 0.7em;
+            max-width: 80%;
+            box-sizing: border-box;
+            margin: 0 auto;
+            background: transparent;
+
+            > div {
+                position: absolute;
+                height: 100%;
+                border-left: 1px solid #a7aaad;
+                box-sizing: border-box;
+                z-index: 1;
+
+                &:nth-last-child(-n+2) {
+                    border: none;
+                }
+            }
+        }
+
+        #slider {
+            margin: 0 auto 20px;
+            max-width: 80%;
+            cursor: pointer;
+            border-radius: 0;
+            position: relative;
+            top: -11px;
+
+            &.ui-widget {
+                &.ui-widget-content {
+                    border: 1px solid #c5c5c5;
+                }
+            }
+
+            &.ui-slider-horizontal {
+                .ui-slider-handle {
+                    top: -0.43em;
+                    z-index: 6;
+
+                    &::before {
+                        position: absolute;
+                        top: 1.7px;
+                        left: 2.6px;
+                        color: #50575e;
+                        content: "◂ ▸";
+                        speak: never;
+                        font-size: 11px;
+                        -webkit-font-smoothing: antialiased;
+                    }
+                }
+            }
+
+            .ui-state-default {
+                border-radius: 50%;
+                width: 22px;
+                height: 22px;
+                outline: none;
+            }
+            .ui-state-active{
+                border: 1px solid #c5c5c5;
+                background: #f6f6f6;
+            }
+            .ui-widget-header{
+                background: unset;
+            }
+        }
+
+        .revisions-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            box-shadow: 0 1px 3px #0000001a;
+            overflow: hidden;
+            padding: 8px;
+
+            .revisions-meta-info {
+                display: flex;
+                align-items: center;
+                font-size: 12px;
+                &:first-child{
+                    margin-bottom: 0.8rem;
+                }
+                strong {
+                    line-height: 2.46153846;
+                    min-width: 60px;
+                    text-align: right;
+                    float: left;
+                    margin-right: 5px;
+                }
+
+                .revisions-author-avatar {
+                    margin-right: 6px;
+                    img{
+                        width: 32px;
+                    }
+                }
+
+                .revisions-author-info {
+                    span {
+                        display: block;
+                        line-height: 1.6;
+                    }
+                }
+            }
+
+            .revisions-restore{
+                #revisions-restore{
+                    background: #2271b1;
+                    border-color: #2271b1;
+                    color: #fff;
+                    display: none;
+                }
+            }
+        }
+
+        .revisions-diff-frame {
+            margin-top: 12px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px #0000001a;
+
+            .revision-title {
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+
+            table {
+                &.diff {
+                    &.is-split-view {
+                        table-layout: fixed;
+                        width: 100%;
+                        margin-bottom: 22px;
+                    }
+
+                    .dashicons {
+                        display: inline-block;
+                        margin-right: 0.4rem;
+                        font-size: 20px;
+                        padding-top: 0.2rem;
+                    }
+
+                    .screen-reader-text {
+                        border: 0;
+                        clip: rect(1px, 1px, 1px, 1px);
+                        -webkit-clip-path: inset(50%);
+                        clip-path: inset(50%);
+                        height: 1px;
+                        margin: -1px;
+                        overflow: hidden;
+                        padding: 0;
+                        position: absolute;
+                        width: 1px;
+                        word-wrap: normal !important;
+                    }
+                    th{
+                        font-size: 14px;
+                        line-height: 1.57142857;
+                        padding: 0.5em 0.5em 0.5em 0.6em;
+                        vertical-align: top;
+                        word-wrap: break-word;
+                    }
+                    td{
+                        font-size: 14px;
+                        line-height: 1.57142857;
+                        padding: 0.5em 0.5em 0.5em 0.6em;
+                        vertical-align: top;
+                        word-wrap: break-word;
+                    }
+                }
+
+                tbody {
+                    tr {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 2px;
+
+                        .diff-deletedline {
+                            position: relative;
+                            background-color: #fcf0f1;
+                            //font-size: 14px;
+                            //line-height: 1.57142857;
+                            //padding: 0.5em 0.5em 0.5em 0.6em;
+                            //vertical-align: top;
+                            //word-wrap: break-word;
+                            //width: 49.8%;
+
+                            del {
+                                text-decoration: none;
+                                background-color: #ffabaf;
+                            }
+                        }
+
+                        .diff-addedline {
+                            position: relative;
+                            background-color: #edfaef;
+                            width: 49.8%;
+
+                            ins {
+                                background-color: #68de7c;
+                                text-decoration: none;
+                            }
+                        }
+                    }
+                    td{
+                        width: 49.8%;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Magezon
+  ~
+  ~ This source file is subject to the Magezon Software License, which is available at https://magezon.com/license/.
+  ~ Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
+  ~ If you wish to customize this module for your needs.
+  ~ Please refer to https://www.magezon.com for more information.
+  ~
+  ~ @category  Magezon
+  ~ @package   Magezon_Revisions
+  ~ @copyright Copyright (C) 2023 Magezon (https://magezon.com)
+  -->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="mgz_revisions" resource="default" engine="innodb" comment="Magezon Revision Table">
+        <column xsi:type="int" name="revision_id" unsigned="false" nullable="false" identity="true"
+                comment="Revision Id"/>
+        <column xsi:type="varchar" name="revision_type" nullable="false" length="100" comment="Revision Type"/>
+        <column xsi:type="text" name="revision_serialize" nullable="true" comment="Revision Content"/>
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="true" comment="Entity ID"/>
+        <column xsi:type="int" name="admin_user_id" unsigned="true" nullable="true" comment="Admin User ID"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Revision Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Revision Update At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="revision_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MGZ_REVISION_ID_ADMIN_USER_TABLE"
+                    table="mgz_revisions" column="admin_user_id" referenceTable="admin_user"
+                    referenceColumn="user_id" onDelete="CASCADE"/>
+        <index referenceId="MGZ_REVISIONS_FULLTEXT"
+               indexType="fulltext">
+            <column name="revision_type"/>
+        </index>
+    </table>
+</schema>

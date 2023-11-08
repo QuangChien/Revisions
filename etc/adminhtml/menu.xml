@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+  ~ Magezon
+  ~
+  ~ This source file is subject to the Magezon Software License, which is available at https://magezon.com/license/.
+  ~ Do not edit or add to this file if you wish to upgrade the to newer versions in the future.
+  ~ If you wish to customize this module for your needs.
+  ~ Please refer to https://www.magezon.com for more information.
+  ~
+  ~ @category  Magezon
+  ~ @package   Magezon_Revisions
+  ~ @copyright Copyright (C) 2023 Magezon (https://magezon.com)
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magezon_Revisions::revisions" title="Revisions" module="Magezon_Revisions" parent="Magezon_Core::extensions"
+             sortOrder="10" resource="Magezon_Revisions::revisions"/>
+        <add id="Magezon_Revisions::page" title="Pages" module="Magezon_Revisions" parent="Magezon_Revisions::revisions"
+             sortOrder="10" action="mgz_revision/page" resource="Magezon_Revisions::revision_pages"/>
+        <add id="Magezon_Revisions::block" title="Blocks" module="Magezon_Revisions" parent="Magezon_Revisions::revisions"
+             sortOrder="20" action="mgz_revision/block" resource="Magezon_Revisions::revision_blocks"/>
+    </menu>
+</config>
